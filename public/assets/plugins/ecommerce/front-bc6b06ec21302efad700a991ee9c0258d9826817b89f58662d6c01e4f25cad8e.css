@@ -1,0 +1,10 @@
+/* line 1, /home/wayne/.rvm/gems/ruby-2.4.1/gems/camaleon_ecommerce-2.0.3/app/assets/stylesheets/plugins/ecommerce/front.scss */
+.ec-list-orders-address {
+  list-style: none;
+}
+
+/* line 5, /home/wayne/.rvm/gems/ruby-2.4.1/gems/camaleon_ecommerce-2.0.3/app/assets/stylesheets/plugins/ecommerce/front.scss */
+form label.error {
+  color: red;
+  font-weight: normal;
+}

@@ -1,0 +1,115 @@
+<!-- header-section-starts -->
+<div class="header">
+    <div class="header-top-strip">
+        <div class="container">
+            <div class="header-top-left">
+                <ul>
+                    <% unless cama_current_user.present? %>
+                        <li><a href="<%= plugins_ecommerce_login_path(return_to: site_current_url) %>"><span class="glyphicon glyphicon-user"> </span> Login</a></li>
+                        <li><a href="<%= plugins_ecommerce_register_url(return_to: site_current_url) %>"><span class="glyphicon glyphicon-lock"></span> Create an Account</a></li>
+                    <% else %>
+                        <li><a href="<%= cama_current_user.decorate.the_url %>"><span class="fa fa-user"> </span> <%= cama_current_user.the_name %></a></li>
+                        <li><a href="<%= cama_admin_dashboard_path %>"><span class="fa fa-tachometer"> </span> DashBoard </a></li>
+                        <li><a href="<%= plugins_ecommerce_orders_path %>"><span class="fa fa-cart"> </span> My Orders</a></li>
+                        <li><a href="<%= cama_admin_logout_url(return_to: site_current_url) %>"><span class="fa fa-sign-out"> </span> Logout</a></li>
+                    <% end %>
+                </ul>
+            </div>
+            <div class="header-right">
+                <div>
+                    <%= raw current_site.draw_languages("language-list list-inline pull-left", true) %>
+                    <%= raw e_draw_ecommerce_currencies(false, {class: 'form-control pull-right', style: 'padding: 2px; height: 23px; width: 45px;'}) %>
+                </div>
+                <div class="clearfix"> </div>
+                <div class="cart box_1">
+                    <a href="<%= plugins_ecommerce_checkout_cart_path %>">
+                        <h3><span class=""> <%= e_current_cart.the_price  %> </span> (<span><%= e_current_cart.items_total %></span>)<img src="<%= theme_asset_url("images/bag.png") %>" alt=""></h3>
+                    </a>
+                    <p><a href="<%= plugins_ecommerce_checkout_cart_path %>" class="simpleCart_empty">My cart</a></p>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>
+<!-- header-section-ends -->
+<div class="banner-top <%= 'inner-head' unless is_home? %>">
+    <div class="container">
+        <%= render 'camaleon_cms/flash_messages' %>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="logo">
+                  <h1><a href="<%= current_site.the_url %>"><span>E</span> -<%= current_site.the_title %></a></h1>
+                </div>
+            </div>
+            <!--/.navbar-header-->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <% cama_menu_parse_items(current_site.nav_menus.where(slug: ['eshop_header_main_menu', 'main_menu']).last.children).each do |item| %>
+                        <% if item[:has_children] %>
+                            <li class="dropdown <%= 'active' if item[:current_parent] %>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= item[:label] %> <b class="caret"></b></a>
+                                <% if item[:levels] <= 1 %>
+                                    <ul class="dropdown-menu">
+                                        <% item[:children].each_with_index do |ss_item, index| %>
+                                            <li class="<%= 'active' if ss_item[:current_item] %>"><a href="<%= ss_item[:url] %>"><%= ss_item[:label] %></a></li>
+                                        <% end %>
+                                    </ul>
+                                <% else %>
+                                    <ul class="dropdown-menu multi-column pull-right columns-<%= (12/(12/item[:children].count).ceil).ceil %>">
+                                        <div class="row">
+                                            <% item[:children].each do |sub_item| %>
+                                                <div class="col-md-<%= (12/item[:children].count).ceil %>">
+                                                    <ul class="multi-column-dropdown">
+                                                        <% ((sub_item[:children] || []).unshift(sub_item)).each_with_index do |ss_item, index| %>
+                                                            <% if index > 0 %>
+                                                                <li class="<%= 'current_item' if ss_item[:current_item] %> <%= 'current_parent_item' if ss_item[:current_parent] %>"><a href="<%= ss_item[:url] %>"><%= ss_item[:label] %></a></li>
+                                                            <% else %>
+                                                                <h6><%= ss_item[:label] %></h6>
+                                                            <% end %>
+                                                        <% end %>
+                                                    </ul>
+                                                </div>
+                                            <% end %>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </ul>
+                                <% end %>
+                            </li>
+                        <% else %>
+                            <li class="<%= 'active' if item[:current_item] %>"><a href="<%= item[:url] %>"><%= item[:label] %></a></li>
+                        <% end %>
+                    <% end %>
+                </ul>
+            </div>
+            <%= cama_edit_link(cama_admin_appearances_nav_menus_menu_url(slug: 'main_menu')) %>
+            <!--/.navbar-collapse-->
+        </nav>
+        <!--/.navbar-->
+    </div>
+</div>
+
+<% if is_home? %>
+    <div class="camera_wrap" id="home_main_slider">
+        <% current_theme.the_attribute_fields('main_home_slider').each do |slide| %>
+            <div data-src="<%= slide['image'] %>">
+                <div style="position:absolute; top:5%; right:5%; color:#fff; padding:5px; width:55%; text-align: right;" class="camera_caption banner-info">
+                    <h3><%= slide['title'] %></h3>
+                    <p><%= slide['descr'] if slide['descr'].present? %></p>
+                    <div class="shop">
+                        <%= link_to(t('.shop_collection_now', default: 'Shop Collection Now'), current_site.the_post(slide['product'].to_i).the_url) if slide['product'].present? %>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+    </div>
+    <div class="clearfix"></div>
+    <script type="application/javascript">jQuery(function(){ $('#home_main_slider').camera({ pagination: false, thumbnails: false}) })</script>
+<% end %>

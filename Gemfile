@@ -58,6 +58,8 @@ gem "camaleon_cms",  '>= 2.4.5'
 gem 'draper', '~> 3' # only for Rails 5
 gem 'sass-rails', '~> 5.0' #only for Rails 5
 
+gem 'camaleon_ecommerce', '>= 2.0.3'
+gem 'mina'
 
 #################### Camaleon CMS include all gems for plugins and themes #################### 
 require './lib/plugin_routes' 

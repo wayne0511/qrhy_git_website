@@ -1,0 +1,60 @@
+<%= content_for :script do %>
+    <%= javascript_include_tag theme_asset_path('js/product_manifest') %>
+<% end %>
+<%= render :partial => "camaleon_cms/flash_messages", locals:{ flash: (flash[:cama_ecommerce] || {}).with_indifferent_access } %>
+<div class="products-page row" id="product_view">
+    <div class="col-md-3">
+        <%= render 'post_types/commerce/product_sidebar', product: @post %>
+    </div>
+
+    <div class="col-md-9 product_info_col">
+        <div class="col-md-5 zoom-grid">
+            <div class="flexslider" id="product_slider">
+                <ul class="slides">
+                    <% @post.the_photos.each do |img| %>
+                        <li data-thumb="<%= img.cama_parse_image_version %>">
+                            <div class="thumb-image"> <img src="<%= img %>" data-imagezoom="true" class="img-responsive" alt="" /> </div>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-7 dress-info">
+            <%= render 'post_types/commerce/product_info', product: @post %>
+            <hr>
+            <div class="social-icons">
+                <ul>
+                    <li><a class="facebook1" href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a class="twitter1" href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a class="googleplus1" href="#"><i class="fa fa-google-plus"></i></a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="reviews-tabs">
+            <!-- Main component for a primary marketing message or call to action -->
+            <ul class="nav nav-tabs responsive hidden-xs hidden-sm" id="myTab">
+                <li class="test-class active"><a role="tab" data-toggle="tab" class="deco-none misc-class" href="#how-to"> More Information</a></li>
+                <li class="test-class"><a role="tab" data-toggle="tab" href="#features">Specifications</a></li>
+                <li class="test-class"><a role="tab" data-toggle="tab" class="deco-none" href="#product_comments">Reviews (<%= @post.the_comments.count %>)</a></li>
+            </ul>
+
+            <div class="tab-content responsive hidden-xs hidden-sm">
+                <div class="tab-pane active" id="how-to">
+                    <%= raw @post.the_content %>
+                </div>
+                <div class="tab-pane" id="features">
+                    <%= raw @post.the_meta('product_specifications') %>
+                </div>
+                <div class="tab-pane" id="product_comments">
+                    <div class="response">
+                        <%= render partial: 'partials/comments', locals: {post: @post, style2: true} if @post.can_commented? %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="clearfix"></div>
+</div>
