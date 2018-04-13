@@ -7,7 +7,7 @@
 
     <% if @children.present? %>
         <div class="panel panel-primary no-line">
-            <div class="panel-heading">Sub Categories</div>
+            <div class="panel-heading">子类别</div>
             <div class="panel-body">
                 <%= render partial: "partials/categories_list", locals: {categories: @children } %>
             </div>
@@ -15,7 +15,7 @@
     <% end %>
 
     <div class="panel panel-primary post_list no-line">
-        <div class="panel-heading">Content</div>
+        <div class="panel-heading">内容</div>
         <div class="panel-body">
             <div class="row">
                 <% @posts.each_with_index do |post, index| %>
